@@ -1,0 +1,14 @@
+{
+  "short_name": "VocalPlus",
+  "name": "VocalPlus Academy",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait"
+}
