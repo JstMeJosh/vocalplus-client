@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../lib/axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const VerifyEmail = () => {
   const { token } = useParams();
@@ -10,8 +10,10 @@ const VerifyEmail = () => {
   const [resendError, setResendError] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
-
+  const hasVerified = useRef(false)
   useEffect(() => {
+    if(hasVerified.current)return;
+    hasVerified.current = true;
     const verify = async () => {
       try {
         const response = await api.get(`/auth/v1/verify/${token}`);
