@@ -41,7 +41,7 @@ const EnrollStudentModal = ({ onClose, onSuccess }) => {
       onSuccess(response.data.message);
       onClose();
     } catch (error) {
-      console.log("error ", error.response)
+      // console.log("error ", error.response)
       setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);

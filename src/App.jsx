@@ -10,6 +10,7 @@ import AuthNavbar from "./components/AuthNavbar"
 import ForgotPassword from "./pages/ForgotPassword"
 import VerifyEmail from "./pages/VerifyEmail"
 import ResetPassword from "./pages/ResetPassword"
+import NotFound from "./pages/NotFound"
 
 
 const AppLayout = () => {
@@ -27,6 +28,7 @@ const AppLayout = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify/:token" element={<VerifyEmail/>}/>
           <Route path="/reset-Password/:token" element={<ResetPassword/>}/>
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
       </main>
     </>

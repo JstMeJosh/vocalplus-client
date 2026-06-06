@@ -21,7 +21,7 @@ const Login = () => {
       login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setError(error.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
