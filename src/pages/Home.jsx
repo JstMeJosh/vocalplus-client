@@ -10,15 +10,16 @@ const MotionLink = motion.create(Link);
 const Home = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await api.get("/courses/v1/courses");
         setCourses(response.data.courses.slice(0, 3));
       } catch (error) {
-        console.log(error);
-      }finally{
-        setLoading(false)
+        // setError("Failed to load courses")
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourses();
@@ -188,6 +189,10 @@ const Home = () => {
                 </div>
               ))}
             </div>
+          ) : courses.length === 0 ? (
+            <p className="text-gray-400 text-center py-10">
+              No courses available at the moment. Check back soon.
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {courses.map((course) => (
