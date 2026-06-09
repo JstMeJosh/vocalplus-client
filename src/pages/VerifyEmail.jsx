@@ -16,7 +16,7 @@ const VerifyEmail = () => {
     hasVerified.current = true;
     const verify = async () => {
       try {
-        const response = await api.get(`/auth/v1/verify/${token}`);
+        const response = await api.get(`/api/v1/verify/${token}`);
         setSuccess(response.data.message);
         setError("");
       } catch (error) {
@@ -31,7 +31,7 @@ const VerifyEmail = () => {
     try {
       e.preventDefault();
       setResendError("");
-      const response = await api.post("/auth/v1/resend-verification", {
+      const response = await api.post("/api/v1/resend-verification", {
         email,
       });
       setResendSuccess(response.data.message);

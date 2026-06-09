@@ -14,7 +14,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await api.get("/courses/v1/courses");
+        const response = await api.get("/api/v1/courses");
         setCourses(response.data.courses.slice(0, 3));
       } catch (error) {
         // setError("Failed to load courses")

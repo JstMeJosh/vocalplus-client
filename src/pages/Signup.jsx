@@ -17,7 +17,7 @@ const Signup = () => {
       setLoading(true);
       setSuccess("")
       setError("");
-      const response = await api.post("auth/v1/signup", {
+      const response = await api.post("/api/v1/auth/signup", {
         name,
         email,
         password,
@@ -94,7 +94,7 @@ const Signup = () => {
 
         <button
           onClick={() =>
-            (window.location.href = "http://localhost:5000/auth/v1/google")
+            (window.location.href = `${import.meta.env.VITE_API_URL}/api/v1/auth/google`)
           }
           className="flex items-center justify-center gap-3 border border-gray-700 hover:border-[#c9a84c] text-white py-3 rounded-lg font-bold transition-all duration-300"
         >

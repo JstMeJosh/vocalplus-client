@@ -16,8 +16,8 @@ const EnrollStudentModal = ({ onClose, onSuccess }) => {
     const fetchData = async () => {
       try {
         const [studentsRes, coursesRes] = await Promise.all([
-          api.get("/users/v1/get-user"),
-          api.get("/courses/v1/courses"),
+          api.get("/api/v1/users"),
+          api.get("/api/v1/courses"),
         ]);
         setStudents(studentsRes.data.students);
         setCourses(coursesRes.data.courses);
@@ -32,7 +32,7 @@ const EnrollStudentModal = ({ onClose, onSuccess }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await api.post("/enrollments/v1/create-enrollment", {
+      const response = await api.post("/api/v1/enrollments/v1", {
         student: selectedStudent,
         course: selectedCourse,
         analysisReport,

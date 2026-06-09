@@ -23,7 +23,7 @@ const ResetPassword = () => {
     
     try {
       setLoading(true);
-      const response = await api.post(`/auth/v1/reset-password/${token}`, {
+      const response = await api.post(`/api/v1/auth/reset-password/${token}`, {
         password,
       });
       setSuccess(response.data.message);
