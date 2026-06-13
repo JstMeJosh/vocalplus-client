@@ -32,7 +32,7 @@ const EnrollStudentModal = ({ onClose, onSuccess }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await api.post("/api/v1/enrollments/v1", {
+      const response = await api.post("/api/v1/enrollments/", {
         student: selectedStudent,
         course: selectedCourse,
         analysisReport,

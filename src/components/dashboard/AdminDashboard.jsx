@@ -1,57 +1,88 @@
-import { useState } from "react";
-import EnrollStudentModal from "./EnrollStudentModal";
+import { useState, useEffect } from "react";
+import EnrollStudentModal from "../enrollment/EnrollStudentModal";
+import api from "../../lib/axios";
 import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [totalEnrollments, setTotalEnrollments] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        setError("");
+        const [studentRes, coursesRes, enrollmentRes] = await Promise.all([
+          api.get("/api/v1/users"),
+          api.get("/api/v1/courses"),
+          api.get("/api/v1/enrollments"),
+        ]);
+        setTotalStudents(studentRes.data.students.length || []);
+        setTotalCourses(coursesRes.data.courses.length || []);
+        // console.log(enrollmentRes.data);
+        setTotalEnrollments(enrollmentRes.data.allEnrollments || 0);
+      } catch (error) {
+        // console.error(error)
+        setError("Failed to load dashboard statistics.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // const revenue this has to filter by  month
+  const enrollmentArray = Array.isArray(totalEnrollments) ? totalEnrollments : [];
+
+  const recentEnrollments = enrollmentArray.slice(0, 5);
+  
+  const pending = enrollmentArray.filter(
+    (item) => item?.paymentStatus === "pending"
+  ).length;
+
+  const partial = enrollmentArray.filter(
+    (item) => item?.paymentStatus === "partial"
+  ).length;
+  
   const stats = {
-    totalStudents: 18,
-    totalTutors: 4,
-    totalCourses: 6,
-    totalRevenue: 850000,
-    pendingPayments: 3,
-    partialPayments: 2,
+    totalStudents: totalStudents,
+    totalTutors: "N/A",
+    totalCourses: totalCourses,
+    totalRevenue: "N/A",
+    pendingPayments: pending,
+    partialPayments: partial,
   };
+
   const statCards = [
     { label: "Total Students", value: stats.totalStudents, icon: "👥" },
     { label: "Total Tutors", value: stats.totalTutors, icon: "🎵" },
     { label: "Total Courses", value: stats.totalCourses, icon: "📚" },
     {
       label: "Total Revenue",
-      value: `₦${stats.totalRevenue.toLocaleString()}`,
+      value:
+        stats.totalRevenue === "N/A"
+          ? "N/A"
+          : `₦${stats.totalRevenue.toLocaleString()}`,
       icon: "💰",
     },
     { label: "Pending Payments", value: stats.pendingPayments, icon: "⏳" },
     { label: "Partial Payments", value: stats.partialPayments, icon: "⚠️" },
   ];
 
-  const recentEnrollments = [
-    {
-      id: 1,
-      name: "Chioma Okafor",
-      course: "Voice Training",
-      status: "paid",
-      date: "2026-05-28",
-    },
-    {
-      id: 2,
-      name: "Emeka Nwosu",
-      course: "Keyboard",
-      status: "pending",
-      date: "2026-05-29",
-    },
-    {
-      id: 3,
-      name: "Adaeze Ibe",
-      course: "Music Theory",
-      status: "partial",
-      date: "2026-05-30",
-    },
-  ];
-
   const [showEnrollModal, setShowEnrollModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#07071b] text-white p-6">
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
       {/* Stats Section */}
       <section className="mb-10">
         <h1 className="text-2xl font-bold mb-6">
@@ -65,7 +96,13 @@ const AdminDashboard = () => {
             >
               <span className="text-3xl">{stat.icon}</span>
               <p className="text-gray-400 text-sm mt-2">{stat.label}</p>
-              <p className="text-white font-bold text-2xl mt-1">{stat.value}</p>
+              <p className="text-white font-bold text-2xl mt-1">
+                {loading ? (
+                  <span className="inline-block w-6 h-6 border-2 border-[#c9a84c] border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  stat.value
+               )}
+              </p>
             </div>
           ))}
         </div>
@@ -109,7 +146,7 @@ const AdminDashboard = () => {
                     Status
                   </th>
                   <th className="text-left p-4 text-[#c9a84c] font-bold">
-                    Date
+                    Start Date
                   </th>
                 </tr>
               </thead>
@@ -124,27 +161,33 @@ const AdminDashboard = () => {
                 ) : (
                   recentEnrollments.map((enrollment) => (
                     <tr
-                      key={enrollment.id}
+                      key={enrollment?._id}
                       className="border-b border-gray-800 hover:bg-[#c9a84c]/5 transition-all duration-300"
                     >
                       <td className="p-4 text-white font-semibold">
-                        {enrollment.name}
+                        {enrollment.student?.name}
                       </td>
-                      <td className="p-4 text-gray-400">{enrollment.course}</td>
+                      <td className="p-4 text-gray-400">
+                        {enrollment.course?.name}
+                      </td>
                       <td className="p-4">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-bold ${
-                            enrollment.status === "paid"
+                            enrollment.paymentStatus === "paid"
                               ? "bg-green-500/20 text-green-400"
-                              : enrollment.status === "pending"
+                              : enrollment.paymentStatus === "pending"
                                 ? "bg-red-500/20 text-red-400"
                                 : "bg-yellow-500/20 text-yellow-400"
                           }`}
                         >
-                          {enrollment.status}
+                          {enrollment.paymentStatus}
                         </span>
                       </td>
-                      <td className="p-4 text-gray-400">{enrollment.date}</td>
+                      <td className="p-4 text-gray-400">
+                        {new Date(enrollment.startDate).toLocaleDateString("en-GB", {day: "numeric",
+        month: "short",
+        year: "numeric"})}
+                      </td>
                     </tr>
                   ))
                 )}
