@@ -28,8 +28,7 @@ const AuthNavbar = () => {
         {/* Desktop — user info + logout */}
         <div className="hidden md:flex items-center gap-4">
           <Link to="/dashboard" className="text-white hover:text-[#c9a84c] font-bold transition-all duration-300">Dashboard</Link>
-          <Link to="/enrollment" className="text-white hover:text-[#c9a84c] font-bold transition-all duration-300">Enrollment</Link>
-          <Link to="/announcement" className="text-white hover:text-[#c9a84c] font-bold transition-all duration-300">Announcement</Link>
+          <Link to="/courses" className="text-white hover:text-[#c9a84c] font-bold transition-all duration-300">Courses</Link>
           
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-full bg-[#c9a84c] text-[#07071b] font-bold flex items-center justify-center text-sm">
@@ -75,8 +74,7 @@ const AuthNavbar = () => {
         </div>
 
         <Link className="text-white font-bold text-xl hover:text-[#c9a84c] transition-all duration-300 border-b border-gray-800 pb-4" to="/dashboard" onClick={() => setIsOpen(false)}>Dashboard</Link>
-        <Link className="text-white font-bold text-xl hover:text-[#c9a84c] transition-all duration-300 border-b border-gray-800 pb-4" to="/enrollment" onClick={() => setIsOpen(false)}>Enrollment</Link>
-        <Link className="text-white font-bold text-xl hover:text-[#c9a84c] transition-all duration-300 border-b border-gray-800 pb-4" to="/announcement" onClick={() => setIsOpen(false)}>Announcement</Link>
+        <Link className="text-white font-bold text-xl hover:text-[#c9a84c] transition-all duration-300 border-b border-gray-800 pb-4" to="/courses" onClick={() => setIsOpen(false)}>Courses</Link>
 
         <div className="mt-auto">
           <button onClick={handleLogout} className="w-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/50 px-4 py-3 rounded-md font-bold transition-all duration-300">

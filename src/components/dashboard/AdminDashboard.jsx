@@ -5,8 +5,10 @@ import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const [totalStudents, setTotalStudents] = useState(0);
+  const [totalTutors, setTotalTutors] = useState(0);
   const [totalCourses, setTotalCourses] = useState(0);
   const [totalEnrollments, setTotalEnrollments] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -15,17 +17,20 @@ const AdminDashboard = () => {
       try {
         setLoading(true)
         setError("");
-        const [studentRes, coursesRes, enrollmentRes] = await Promise.all([
-          api.get("/api/v1/users"),
-          api.get("/api/v1/courses"),
-          api.get("/api/v1/enrollments"),
-        ]);
-        setTotalStudents(studentRes.data.students.length || []);
-        setTotalCourses(coursesRes.data.courses.length || []);
-        // console.log(enrollmentRes.data);
+        const [studentRes, tutorRes, coursesRes, enrollmentRes, paymentsRes] =
+          await Promise.all([
+            api.get("/api/v1/users?role=student"),
+            api.get("/api/v1/users?role=tutor"),
+            api.get("/api/v1/courses"),
+            api.get("/api/v1/enrollments"),
+            api.get("/api/v1/payments"),
+          ]);
+        setTotalStudents(studentRes.data.users?.length || 0);
+        setTotalTutors(tutorRes.data.users?.length || 0);
+        setTotalCourses(coursesRes.data.courses?.length || 0);
         setTotalEnrollments(enrollmentRes.data.allEnrollments || 0);
+        setTotalRevenue(paymentsRes.data.totalRevenue || 0);
       } catch (error) {
-        // console.error(error)
         setError("Failed to load dashboard statistics.");
       } finally {
         setLoading(false);
@@ -51,9 +56,9 @@ const AdminDashboard = () => {
   
   const stats = {
     totalStudents: totalStudents,
-    totalTutors: "N/A",
+    totalTutors: totalTutors,
     totalCourses: totalCourses,
-    totalRevenue: "N/A",
+    totalRevenue: totalRevenue,
     pendingPayments: pending,
     partialPayments: partial,
   };
@@ -64,10 +69,7 @@ const AdminDashboard = () => {
     { label: "Total Courses", value: stats.totalCourses, icon: "📚" },
     {
       label: "Total Revenue",
-      value:
-        stats.totalRevenue === "N/A"
-          ? "N/A"
-          : `₦${stats.totalRevenue.toLocaleString()}`,
+      value: `₦${(stats.totalRevenue || 0).toLocaleString()}`,
       icon: "💰",
     },
     { label: "Pending Payments", value: stats.pendingPayments, icon: "⏳" },
@@ -80,7 +82,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-[#07071b] text-white p-6">
       {error && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-          <p className="text-red-400 text-sm">{error}</p>
+          <p className="text-red-400 text-md text-center font-bold">{error}</p>
         </div>
       )}
       {/* Stats Section */}

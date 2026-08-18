@@ -200,6 +200,14 @@ const Home = () => {
               ))}
             </div>
           )}
+          <div className="text-center mt-10">
+            <Link
+              to="/courses"
+              className="inline-block border-2 border-[#c9a84c] hover:bg-[#c9a84c] hover:text-[#07071b] text-[#c9a84c] px-8 py-3 rounded-md font-bold transition-all duration-300"
+            >
+              View All Courses →
+            </Link>
+          </div>
         </motion.section>
       </section>
 

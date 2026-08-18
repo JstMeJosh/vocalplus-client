@@ -16,11 +16,11 @@ const EnrollStudentModal = ({ onClose, onSuccess }) => {
     const fetchData = async () => {
       try {
         const [studentsRes, coursesRes] = await Promise.all([
-          api.get("/api/v1/users"),
+          api.get("/api/v1/users?role=student"),
           api.get("/api/v1/courses"),
         ]);
-        setStudents(studentsRes.data.students);
-        setCourses(coursesRes.data.courses);
+        setStudents(studentsRes.data.users || []);
+        setCourses(coursesRes.data.courses || []);
       } catch (error) {
         setError("Failed to load data");
       }

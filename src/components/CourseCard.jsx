@@ -13,7 +13,7 @@ const CourseCard = ({ course }) => {
         <span className="text-white font-bold">₦{course.price.toLocaleString()}</span>
         <span className="text-gray-400 text-sm">{course.duration}</span>
       </div>
-      <Link to="/login" className="block mt-4 w-full bg-[#c9a84c]/10 hover:bg-[#c9a84c] text-[#c9a84c] hover:text-[#07071b] border border-[#c9a84c] rounded-lg py-2 font-bold transition-all duration-300 text-center">
+      <Link to="/signup" className="block mt-4 w-full bg-[#c9a84c]/10 hover:bg-[#c9a84c] text-[#c9a84c] hover:text-[#07071b] border border-[#c9a84c] rounded-lg py-2 font-bold transition-all duration-300 text-center">
         Enroll Now
       </Link>
     </motion.div>
